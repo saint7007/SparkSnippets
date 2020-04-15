@@ -1,0 +1,38 @@
+scala> val df3=df2.withColumn("eventTime1", unix_timestamp($"eventTime", "yyyy-MM-dd'-'HH:mm:ss.SSS'Z'").cast(TimestampType))
+df3: org.apache.spark.sql.DataFrame = [id: string, eventTime: string ... 1 more field]
+
+scala> df3
+res5: org.apache.spark.sql.DataFrame = [id: string, eventTime: string ... 1 more field]
+
+scala> val df2 = Seq(("2017-08-01-02:26:59.000Z")).toDF( "eventTime")
+df2: org.apache.spark.sql.DataFrame = [eventTime: string]
+
+scala> val df3=df2.withColumn("eventTime1", unix_timestamp($"eventTime", "yyyy-MM-dd'-'HH:mm:ss.SSS'Z'").cast(TimestampType))
+df3: org.apache.spark.sql.DataFrame = [eventTime: string, eventTime1: timestamp]
+
+scala> df3.show()
++--------------------+-------------------+
+|           eventTime|         eventTime1|
++--------------------+-------------------+
+|2017-08-01-02:26:...|2017-08-01 02:26:59|
++--------------------+-------------------+
+
+
+scala> 
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+scala> val df4 = Seq(("jio|bigdata|interview")).toDF( "mystringpipesep")
+df4: org.apache.spark.sql.DataFrame = [mystringpipesep: string]
+
+scala> df4.withColumn("mystringindivi", explode(split($"mystringpipesep", "[|]"))).show
++--------------------+--------------+
+|     mystringpipesep|mystringindivi|
++--------------------+--------------+
+|jio|bigdata|inter...|           jio|
+|jio|bigdata|inter...|       bigdata|
+|jio|bigdata|inter...|     interview|
++--------------------+--------------+
+
